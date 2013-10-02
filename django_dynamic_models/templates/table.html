@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% regroup models by model as model_list %}
+
+{#    <ul>#}
+{#    {% for model in model_list %}#}
+{#        <li>#}
+{#        <ul>#}
+{#            {{ model }}#}
+{#        </ul>#}
+{#        </li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+
+    <table style="border: 1">
+        <tr>
+            <th>Tables</th>
+            <th>Data</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+{% endblock %}
