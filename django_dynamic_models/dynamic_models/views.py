@@ -6,10 +6,13 @@ from django.shortcuts import render_to_response
 def index_view(request):
     models = []
     for ct in ContentType.objects.all():
-        instances = ct.model_class().objects.all()
+        #instances = ct.model_class().objects.all()
+        #
+        #models.append({'model': ct.model,
+        #               'instances': instances
+        #               })
+        #print models
+        models.append(ct.model)
 
-        models.append({'model': ct.model,
-                       'instances': instances
-                       })
-        print models
+    #print models
     return render_to_response('../templates/table.html', {'models': models})

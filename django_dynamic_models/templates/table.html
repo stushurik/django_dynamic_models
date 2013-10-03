@@ -2,27 +2,36 @@
 
 {% block content %}
 
-    {% regroup models by model as model_list %}
-
-{#    <ul>#}
-{#    {% for model in model_list %}#}
-{#        <li>#}
-{#        <ul>#}
-{#            {{ model }}#}
-{#        </ul>#}
-{#        </li>#}
-{#    {% endfor %}#}
-{#    </ul>#}
-
-    <table style="border: 1">
+    <table>
         <tr>
             <th>Tables</th>
             <th>Data</th>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>
+                <ul class="nav nav-pills nav-stacked menu" >
+                    {% for model in models %}
+                        {% if forloop.counter == 1 %}
+                            <li class="active"><a>{{ model|capfirst }}</a></li>
+                        {% else %}
+                            <li><a>{{ model|capfirst }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                </ul>
+            </td>
+            <td>
+                    {% for model in models %}
+                        <div id='{{ model }}' style="z-index: {{ forloop.counter }}"
+                                class="{% if forloop.counter != 1 %}not_{% endif %}displayed">
+                            Layer: {{ forloop.counter }}
+                        </div>
+
+                    {% endfor %}
+            </td>
         </tr>
     </table>
+
+
 
 {% endblock %}
