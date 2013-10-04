@@ -3,7 +3,6 @@ $(document).ready(function() {
     $(".menu").click(function (event) {
         $('.active').removeClass('active');
         $(event.target).parent().addClass('active')
-//        $('#'+$(event.target).)
 
         var old_displayed = $('.displayed');
         old_displayed.removeClass('displayed');

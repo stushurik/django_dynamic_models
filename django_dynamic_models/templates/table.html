@@ -22,7 +22,7 @@
             </td>
             <td>
                     {% for model in models %}
-                        <div id='{{ model }}' style="z-index: {{ forloop.counter }}"
+                        <div id='{{ model }}' style="z-index: {{ forloop.counter }}; border: 1px solid #000000"
                                 class="{% if forloop.counter != 1 %}not_{% endif %}displayed">
                             Layer: {{ forloop.counter }}
                         </div>
