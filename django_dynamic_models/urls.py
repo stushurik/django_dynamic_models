@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns("django.views", url(r"static/(?P<path>.*)$", "static.serve",
                                             {"document_root": settings.STATIC_ROOT}), )
+
 urlpatterns += patterns("django.views", url(r"media/(?P<path>.*)$", "static.serve",
                                             {"document_root": settings.MEDIA_ROOT}), )
 urlpatterns += patterns('',

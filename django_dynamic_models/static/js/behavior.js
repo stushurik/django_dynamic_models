@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
     $(".menu").click(function (event) {
+        event.preventDefault();
+
         $('.active').removeClass('active');
         $(event.target).parent().addClass('active')
 
@@ -14,7 +16,15 @@ $(document).ready(function() {
         displayed.removeClass('not_displayed');
         displayed.addClass('displayed');
 
+        var href = $(event.target).attr('href');
 
+        $.ajax({
+            url: href,
+            success: function(data, status, xhr){
+            // append the response data in the HTML
+                $(id).append(data);
+            }
+        });
 
     });
 

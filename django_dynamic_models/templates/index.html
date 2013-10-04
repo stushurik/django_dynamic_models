@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <table>
+        <tr>
+            <th>Tables</th>
+            <th>Data</th>
+        </tr>
+        <tr>
+            <td>
+                <ul class="nav nav-pills nav-stacked menu" >
+                    {% for model in models %}
+                        {% if forloop.counter == 1 %}
+                            <li class="active"><a class="models_menu" href="{% url 'ajax_get_model' model %}">{{ model|capfirst }}</a></li>
+                        {% else %}
+                            <li><a class="models_menu" href="{% url 'ajax_get_model' model=model %}">{{ model|capfirst }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                </ul>
+            </td>
+            <td>
+                    {% for model in models %}
+                        <div id='{{ model }}' style="z-index: {{ forloop.counter }}; border: 1px solid #000000"
+                                class="{% if forloop.counter != 1 %}not_{% endif %}displayed">
+                            Layer: {{ forloop.counter }}
+                        </div>
+
+                    {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    <a href="{% url 'generate' %}">generate</a>
+
+
+
+{% endblock %}

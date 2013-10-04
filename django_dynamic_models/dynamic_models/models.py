@@ -1,3 +1,6 @@
-from django.db import models
+from django.db.models import Model, TextField, BooleanField
 
-# Create your models here.
+
+class DynamicModel(Model):
+    description = TextField(null=False, blank=False)
+    is_created = BooleanField(default=False)
