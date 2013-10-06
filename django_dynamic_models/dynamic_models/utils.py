@@ -63,8 +63,6 @@ def text_description_to_model(module, text, app_label, admin_register=True, verb
         clear_url_caches()
 
 
-
-
 def create_and_migrate_migration():
 
     #subprocess.call(
@@ -79,7 +77,7 @@ def create_and_migrate_migration():
     subprocess.call(
         [
             'python',
-            os.path.join(settings.DJANGO_PROJECT_ROOT,'manage.py'),
+            os.path.join(settings.DJANGO_PROJECT_ROOT, 'manage.py'),
             'migrate'
         ])
     #
