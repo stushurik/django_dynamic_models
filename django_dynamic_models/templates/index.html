@@ -2,13 +2,15 @@
 
 {% block content %}
 
+    <a href="{% url 'generate' %}">generate</a><br><br>
+
     <table>
         <tr>
             <th>Tables</th>
             <th>Data</th>
         </tr>
         <tr>
-            <td>
+            <td valign="top">
                 <ul class="nav nav-pills nav-stacked menu" >
                     {% for model in models %}
                         {% if forloop.counter == 1 %}
@@ -20,10 +22,10 @@
 
                 </ul>
             </td>
-            <td>
+            <td valign="top">
                     {% for model in models %}
                         <div id='{{ model }}' style="z-index: {{ forloop.counter }}; border: 1px solid #000000"
-                                class="{% if forloop.counter != 1 %}not_{% endif %}displayed">
+                                class="{% if forloop.counter != 1 %}not_{% endif %}displayed scroll">
                             Layer: {{ forloop.counter }}
                         </div>
 
@@ -31,9 +33,5 @@
             </td>
         </tr>
     </table>
-
-    <a href="{% url 'generate' %}">generate</a>
-
-
 
 {% endblock %}

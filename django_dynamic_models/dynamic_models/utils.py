@@ -20,7 +20,7 @@ def _field_by_type(field_type, verbose_name=''):
         return None
 
 
-def text_description_to_model(module, text, app_label, admin_register=True):
+def text_description_to_model(module, text, app_label, admin_register=True, verbosity=False):
     dct = yaml.load(text)
     for model_name in dct.keys():
         fields = dct[model_name]['fields']
@@ -36,6 +36,9 @@ def text_description_to_model(module, text, app_label, admin_register=True):
 
         setattr(module, model_name, NewModel)
 
+        if verbosity:
+            print 'Creating %s ...' % model_name
+
         try:
             new_ct = ContentType()
             new_ct.app_label = app_label
@@ -44,7 +47,8 @@ def text_description_to_model(module, text, app_label, admin_register=True):
             new_ct.save()
 
         except Exception:
-            pass
+            if verbosity:
+                print 'ContentType %s exist' % model_name
 
         if admin_register:
 

@@ -22,6 +22,7 @@ $(document).ready(function() {
             url: href,
             success: function(data, status, xhr){
             // append the response data in the HTML
+                $(id).empty();
                 $(id).append(data);
             }
         });
