@@ -1,6 +1,9 @@
-<form method="post" action="{% url 'ajax_get_model' model %}">
+{% load static %}
 
-    {% csrf_token %}
+<script src="{% static "js/button_behavior.js"%}"></script>
+
+
+    {{ formset.management_form }}
 
     {{ formset.non_form_errors.as_ul }}
     <table id="formset" class="form">
@@ -28,4 +31,4 @@
       </tr>
     {% endfor %}
     </table>
-</form>
+    <input type="submit" class="btn btn-large btn btn-success">

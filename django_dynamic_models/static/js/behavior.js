@@ -20,12 +20,10 @@ $(document).ready(function() {
 
         $.ajax({
             url: href,
-            success: function(data, status, xhr){
-            // append the response data in the HTML
+            success: function(data){
                 $(id).empty();
                 $(id).append(data);
-//                $(id).children().css('display','run-in');
-                $('.dp').datepicker();
+                $('.dp').datepicker()
             }
         });
 

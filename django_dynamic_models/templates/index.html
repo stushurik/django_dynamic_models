@@ -24,11 +24,15 @@
             </td>
             <td valign="top">
                     {% for model in models %}
+
+                    <form method="post" action="{% url 'ajax_get_model' model %}">
+
+                        {% csrf_token %}
                         <div id='{{ model }}' style="z-index: {{ forloop.counter }}; border: 1px solid #000000"
                                 class="{% if forloop.counter != 1 %}not_{% endif %}displayed scroll">
                             Layer: {{ forloop.counter }}
                         </div>
-
+                    </form>
                     {% endfor %}
             </td>
         </tr>

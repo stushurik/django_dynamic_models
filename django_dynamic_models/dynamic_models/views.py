@@ -6,6 +6,7 @@ from django.db.models import DateField
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.forms.models import modelformset_factory
+from django.template import RequestContext
 from dynamic_models.models import DynamicModel
 from dynamic_models.utils import text_description_to_model, \
     create_and_migrate_migration
@@ -16,7 +17,10 @@ def index_view(request):
     models = []
     for ct in ContentType.objects.filter(app_label='dynamic_models'):
         models.append(ct.model)
-    return render_to_response('../templates/index.html', {'models': models})
+    return render_to_response('../templates/index.html',
+                              {'models': models},
+                              context_instance=RequestContext(request)
+                              )
 
 
 def ajax_get_model(request, model):
@@ -28,8 +32,6 @@ def ajax_get_model(request, model):
             if isinstance(field, DateField):
                 date_field[field.name] = CalendarWidget()
 
-        print date_field
-
         class DynamicForm(ModelForm):
             class Meta:
                 model = ct.model_class()
@@ -40,9 +42,22 @@ def ajax_get_model(request, model):
             form=DynamicForm,
             extra=1)
 
-        formset = DynamicFormSet(
-            queryset=ct.model_class().objects.all()
-        )
+        print 'tut'
+
+        if request.POST:
+            print request.POST
+            formset = DynamicFormSet(request.POST)
+            if formset.is_valid():
+                forms = formset.save(commit=False)
+                for form in forms:
+                    print form
+                return HttpResponseRedirect(reverse('index'))
+            print formset.errors
+
+        else:
+            formset = DynamicFormSet(
+                queryset=ct.model_class().objects.all()
+            )
 
         return render_to_response('../templates/table.html',
                                   {'formset': formset,
