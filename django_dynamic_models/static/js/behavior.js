@@ -24,7 +24,8 @@ $(document).ready(function() {
             // append the response data in the HTML
                 $(id).empty();
                 $(id).append(data);
-                $(id).children().css('display','run-in');
+//                $(id).children().css('display','run-in');
+                $('.dp').datepicker();
             }
         });
 

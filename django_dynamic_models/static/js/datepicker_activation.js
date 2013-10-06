@@ -1,4 +1,4 @@
 $(function(){
     $('.dp').datepicker();
-    alert('tut');
+//    alert('tut');
 });
