@@ -1,3 +1,4 @@
+import os
 import subprocess
 import yaml
 from django.contrib import admin
@@ -78,7 +79,7 @@ def create_and_migrate_migration():
     subprocess.call(
         [
             'python',
-            'manage.py',
+            os.path.join(settings.DJANGO_PROJECT_ROOT,'manage.py'),
             'migrate'
         ])
     #

@@ -2,12 +2,14 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
+from django.db.models import DateField
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.forms.models import modelformset_factory
 from dynamic_models.models import DynamicModel
 from dynamic_models.utils import text_description_to_model, \
     create_and_migrate_migration
+from dynamic_models.widgets import CalendarWidget
 
 
 def index_view(request):
@@ -21,21 +23,31 @@ def ajax_get_model(request, model):
     if request.is_ajax():
         ct = ContentType.objects.get(model=model)
 
+        date_field = {}
+        for field in ct.model_class()._meta.fields:
+            if isinstance(field, DateField):
+                date_field[field.name] = CalendarWidget()
+
+        print date_field
+
         class DynamicForm(ModelForm):
             class Meta:
                 model = ct.model_class()
+                widgets = date_field
 
         DynamicFormSet = modelformset_factory(
             ct.model_class(),
             form=DynamicForm,
-            extra=2)
+            extra=1)
 
         formset = DynamicFormSet(
             queryset=ct.model_class().objects.all()
         )
 
         return render_to_response('../templates/table.html',
-                                  {'formset': formset})
+                                  {'formset': formset,
+                                   'model': model
+                                   })
     else:
         return HttpResponseRedirect(reverse('index'))
 

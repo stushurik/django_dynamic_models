@@ -1,4 +1,7 @@
-<form method="post" action="">
+<form method="post" action="{% url 'ajax_get_model' model %}">
+
+    {% csrf_token %}
+
     {{ formset.non_form_errors.as_ul }}
     <table id="formset" class="form">
     {% for form in formset.forms %}
