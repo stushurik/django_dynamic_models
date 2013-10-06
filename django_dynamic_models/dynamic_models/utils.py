@@ -36,11 +36,15 @@ def text_description_to_model(module, text, app_label, admin_register=True):
 
         setattr(module, model_name, NewModel)
 
-        new_ct = ContentType()
-        new_ct.app_label = app_label
-        new_ct.name = model_name
-        new_ct.model = model_name.lower()
-        new_ct.save()
+        try:
+            new_ct = ContentType()
+            new_ct.app_label = app_label
+            new_ct.name = model_name
+            new_ct.model = model_name.lower()
+            new_ct.save()
+
+        except Exception:
+            pass
 
         if admin_register:
 
