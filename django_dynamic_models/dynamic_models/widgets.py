@@ -20,9 +20,8 @@ class CalendarWidget(TextInput):
                          u'id=\"dpYears\" data-date=\"2012-12-02\" '
                          u'data-date-format=\"yyyy-mm-dd\" '
                          u'data-date-viewmode=\"years\">'
-                         u'<input type=\"text\" '
+                         u'<input class = \"dp\" type=\"text\" '
                          u'id=\"birth\"  name=\"birthday\" value=\"%s\">'
-                         u'<span class=\"add-on\"><i class="icon-calendar">'
-                         u'</i></span></div>' %
+                         u'</div>' %
                          value
                          )
