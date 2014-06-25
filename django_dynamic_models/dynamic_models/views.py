@@ -42,23 +42,19 @@ def ajax_get_model(request, model):
             form=DynamicForm,
             extra=1)
 
-        print 'tut'
-
         if request.POST:
-            print request.POST
+
             formset = DynamicFormSet(request.POST)
             if formset.is_valid():
-                forms = formset.save(commit=False)
-                for form in forms:
-                    print form
-                return HttpResponseRedirect(reverse('index'))
-            print formset.errors
+                print 'valid'
+                formset.save()
 
         else:
             formset = DynamicFormSet(
                 queryset=ct.model_class().objects.all()
             )
 
+        print formset
         return render_to_response('../templates/table.html',
                                   {'formset': formset,
                                    'model': model
