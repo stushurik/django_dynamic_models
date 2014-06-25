@@ -8,8 +8,6 @@ $(document).ready(function() {
 
         var url =form.attr('action');
 
-        alert(id+' '+url);
-
         $.ajax({
             type: "POST",
             url: url,
