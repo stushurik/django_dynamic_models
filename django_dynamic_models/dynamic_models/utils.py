@@ -1,13 +1,13 @@
 import os
 import subprocess
+from django.core.management import call_command
 import yaml
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
-from django.core.management import call_command
 from django.core.urlresolvers import clear_url_caches
 from django.db.models import IntegerField, DateField, CharField, Model
 from django.utils.importlib import import_module
-from settings import settings
+from django.conf import settings
 
 
 def _field_by_type(field_type, verbose_name=''):
@@ -52,11 +52,13 @@ def text_description_to_model(module, text, app_label, admin_register=True, verb
                 print 'ContentType %s exist' % model_name
 
         if admin_register:
+            try:
+                class Admin(admin.ModelAdmin):
+                    pass
 
-            class Admin(admin.ModelAdmin):
+                admin.site.register(NewModel, Admin)
+            except Exception:
                 pass
-
-            admin.site.register(NewModel, Admin)
 
     if admin_register:
         reload(import_module(settings.ROOT_URLCONF))
@@ -65,22 +67,22 @@ def text_description_to_model(module, text, app_label, admin_register=True, verb
 
 def create_and_migrate_migration():
 
-    #subprocess.call(
-    #    [
+    call_command('schemamigration', 'dynamic_models', auto=True)
+    # call_command('syncdb', migrate=True)
+
+    # subprocess.call(
+    #     [
     #        'python',
-    #        'manage.py',
+    #        os.path.join(settings.DJANGO_PROJECT_ROOT, 'manage.py'),
     #        'schemamigration',
     #        'dynamic_models',
     #        '--auto'
-    #    ])
-    call_command('schemamigration', 'dynamic_models', auto=True)
+    #     ]
+    # )
     subprocess.call(
         [
             'python',
             os.path.join(settings.DJANGO_PROJECT_ROOT, 'manage.py'),
             'migrate'
-        ])
-    #
-    #
-    #
-    #call_command('migrate')
+        ]
+    )

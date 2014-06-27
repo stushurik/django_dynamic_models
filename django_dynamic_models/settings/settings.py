@@ -138,6 +138,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.csrf'
 )
 
+TESTING = 'test' in sys.argv
+
 try:
     from local_settings import *
 except ImportError as e:

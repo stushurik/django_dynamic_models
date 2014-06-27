@@ -1,34 +1,39 @@
 {% load static %}
 
-<script src="{% static "js/button_behavior.js"%}"></script>
+<script src="{% static "js/button_behavior.js" %}"></script>
 
 
-    {{ formset.management_form }}
+{{ formset.management_form }}
 
-    {{ formset.non_form_errors.as_ul }}
-    <table id="formset" class="form">
+{{ formset.non_form_errors.as_ul }}
+<table id="formset" class="form">
     {% for form in formset.forms %}
-      {% if forloop.first %}
-      <thead><tr>
-        {% for field in form.visible_fields %}
-        <th>{{ field.label|capfirst }}</th>
-        {% endfor %}
-      </tr></thead>
-      {% endif %}
-      <tr class="{% cycle row1,row2 %}">
-      {% for field in form.visible_fields %}
-        <td>
-        {# Include the hidden fields in the form #}
+
+        {{ form.empty }}
+
         {% if forloop.first %}
-          {% for hidden in form.hidden_fields %}
-          {{ hidden }}
-          {% endfor %}
+            <thead>
+            <tr>
+                {% for field in form.visible_fields %}
+                    <th>{{ field.label|capfirst }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
         {% endif %}
-          {{ field.errors.as_ul }}
-          {{ field }}
-        </td>
-      {% endfor %}
-      </tr>
+        <tr class="{% cycle row1,row2 %}">
+            {% for field in form.visible_fields %}
+                <td>
+                    {# Include the hidden fields in the form #}
+                    {% if forloop.first %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    {% endif %}
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
-    </table>
-    <input type="submit" class="btn btn-large btn btn-success">
+</table>
+<input type="submit" class="btn btn-large btn btn-success">

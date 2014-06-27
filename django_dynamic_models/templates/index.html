@@ -5,19 +5,15 @@
     <a href="{% url 'generate' %}">generate</a><br><br>
 
     <table>
-        <tr>
+        <tr class="table">
             <th>Tables</th>
             <th>Data</th>
         </tr>
-        <tr>
+        <tr class="table" >
             <td valign="top">
                 <ul class="nav nav-pills nav-stacked menu" >
                     {% for model in models %}
-                        {% if forloop.counter == 1 %}
-                            <li class="active"><a class="models_menu" href="{% url 'ajax_get_model' model %}">{{ model|capfirst }}</a></li>
-                        {% else %}
-                            <li><a class="models_menu" href="{% url 'ajax_get_model' model=model %}">{{ model|capfirst }}</a></li>
-                        {% endif %}
+                        <li><a class="models_menu" href="{% url 'ajax_get_model' model %}">{{ model|capfirst }}</a></li>
                     {% endfor %}
 
                 </ul>
@@ -30,7 +26,7 @@
                         {% csrf_token %}
                         <div id='{{ model }}' style="z-index: {{ forloop.counter }}; border: 1px solid #000000"
                                 class="{% if forloop.counter != 1 %}not_{% endif %}displayed scroll">
-                            Layer: {{ forloop.counter }}
+                            Choose table from the left "Available models" list
                         </div>
                     </form>
                     {% endfor %}

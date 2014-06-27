@@ -40,13 +40,16 @@ def ajax_get_model(request, model):
         DynamicFormSet = modelformset_factory(
             ct.model_class(),
             form=DynamicForm,
-            extra=1)
+            extra=1,
+            can_delete=True,
+        )
 
         if request.POST:
 
+            print request.POST
+
             formset = DynamicFormSet(request.POST)
             if formset.is_valid():
-                print 'valid'
                 formset.save()
 
         else:
@@ -54,7 +57,6 @@ def ajax_get_model(request, model):
                 queryset=ct.model_class().objects.all()
             )
 
-        print formset
         return render_to_response('../templates/table.html',
                                   {'formset': formset,
                                    'model': model
@@ -65,11 +67,11 @@ def ajax_get_model(request, model):
 
 def generate(request):
 
-    import dynamic_models.models
+    import models
     for dm in DynamicModel.objects.filter(is_created=False):
 
         text_description_to_model(
-            dynamic_models.models,
+            models,
             dm.description,
             'dynamic_models'
         )

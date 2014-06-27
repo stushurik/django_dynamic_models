@@ -1,14 +1,17 @@
-import dynamic_models.models
-from dynamic_models.models import DynamicModel
-from dynamic_models.utils import text_description_to_model
+from django.conf import settings
 
-try:
-    for dm in DynamicModel.objects.filter(is_created=True):
-        text_description_to_model(
-            dynamic_models.models,
-            dm.description,
-            'dynamic_models',
-            verbosity=True
-        )
-except Exception:
-    pass
+import models
+from .utils import text_description_to_model
+
+
+if not settings.TESTING:
+    try:
+        for dm in models.DynamicModel.objects.filter(is_created=True):
+            text_description_to_model(
+                models,
+                dm.description,
+                'dynamic_models',
+                verbosity=True
+            )
+    except Exception:
+        pass
