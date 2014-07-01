@@ -22,27 +22,15 @@ $(document).ready(function() {
             $.ajax({
                 url: href,
                 success: function (data) {
-                    $(id).empty();
-                    $(id).append(data);
-                    $('.dp').datepicker()
+
+                    var doc = jsyaml.load(data);
+//                    $(id).empty();
+//                    $(id).append(data);
+//                    $('.dp').datepicker()
                 }
             });
         }
 
     });
 
-
-//    $('span').live('click', function () {
-//        var input = $('<input />', {'type': 'text', 'name': 'aname', 'value': $(this).html()});
-//        $(this).parent().append(input);
-//        $(this).remove();
-//        input.focus();
-//    });
-//
-//    $('input').live('blur', function () {
-//        $(this).parent().append($('<span />').html($(this).val()));
-//        $(this).remove();
-//    });
-
-
-})
+});
