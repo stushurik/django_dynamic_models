@@ -2,18 +2,14 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.forms import ModelForm
-from django.db.models import DateField
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from django.forms.models import modelformset_factory
 from django.template import RequestContext
 
 from .models import DynamicModel
 from .utils import text_description_to_model, \
     create_and_migrate_migration
-from .widgets import CalendarWidget
-from django_dynamic_models.dynamic_models.models import get_values_from_model
+from .models import get_values_from_model
 
 
 def index_view(request):
@@ -34,24 +30,6 @@ def ajax_get_model(request, model):
         data = ""
 
         ct = ContentType.objects.get(model=model)
-
-        # date_field = {}
-        # for field in ct.model_class()._meta.fields:
-        #     if isinstance(field, DateField):
-        #         date_field[field.name] = CalendarWidget()
-
-        # class DynamicForm(ModelForm):
-        #     class Meta:
-        #         model = ct.model_class()
-        #         widgets = date_field
-
-        # DynamicFormSet = modelformset_factory(
-        #     ct.model_class(),
-        #     form=DynamicForm,
-        #     extra=1,
-        #     can_delete=True,
-        # )
-
         more = request.POST.get('more')
 
         items = None
@@ -60,23 +38,19 @@ def ajax_get_model(request, model):
             globals()['items'] = get_values_from_model(ct.model_class(), 2)
             items = globals().get('items')
 
-        # if True:
-        #
-        #     initial = """
-        #         - fields: {department: '5', spots: 5}
-        #           model: dynamic_models.rooms
-        #           pk: -1
-        #         - fields: {department: '6', spots: 6}
-        #           model: dynamic_models.rooms
-        #           pk: -2
-        #     """
-        #
-        #     for deserialized_object in serializers.deserialize("yaml", initial):
-        #         print dir(deserialized_object.object)
-        #         deserialized_object.object._set_pk_val(None)
-        #         deserialized_object.save()
-        #
-        # else:
+        if request.POST:
+            print 'try deser'
+
+            yaml_data = request.POST.get('value')
+
+            for deserialized_object in serializers.deserialize("yaml", yaml_data):
+                # deserialized_object.object._set_pk_val(None)
+
+                # print deserialized_object.object
+
+                deserialized_object.save()
+
+        print 'here'
 
         query = None
 
@@ -91,8 +65,6 @@ def ajax_get_model(request, model):
                 "yaml",
                 query,
             )
-
-        print type(data)
 
         return HttpResponse(
             data,

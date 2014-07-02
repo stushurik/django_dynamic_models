@@ -25,16 +25,18 @@ $(document).ready(function () {
                 success: function (data) {
 
                     var table_body = "";
+
                     var items = jsyaml.load(data);
 
                     var first_iteration = true;
                     var headers = "<tr>";
                     for (var i in items) {
 
-                        var row = "<tr>";
                         var obj = items[i];
+                        var row = "<tr id='" + obj.pk + "' class='" + obj.model + "'>";
+
                         for (key in obj.fields) {
-                            row += "<td class='cell " + typeof obj.fields[key] + "'>" + obj.fields[key] + "</td>";
+                            row += "<td class='cell " + typeof obj.fields[key] + "' data-value='" + key + "'>" + obj.fields[key] + "</td>";
 
                             if (first_iteration) {
                                 headers += "<th>" + key + "</th>";
@@ -127,19 +129,69 @@ $( document ).on( "click", ".btn", function(event) {
 
         var form = $(event.target).parent();
 
-//        var id = '#'+$(event.target).parent().attr('id');
-
         var url =form.attr('action');
 
-//        $.ajax({
-//            type: "POST",
-//            url: url,
-//            data: form.serialize(),
-//            success: function(data){
+        var yaml = []
+
+        var obj = {
+            fields: {},
+            model: "",
+            pk: ""
+        };
+        $('#formset th').each(function(k, header){
+            obj.fields[$(header).text()] = ""
+        });
+
+
+
+        $('#formset tr:has(td)').each(function(i, row){
+
+            var element = $.extend(true, {}, obj);
+
+            var cells = $(row).find('td');
+
+
+            cells.each(function(j, cell){
+
+                var key = $(cell).attr('data-value');
+                if ($(cell).hasClass('string')) {
+                    element.fields[key] = $(cell).text();
+                } else {
+                    if ($(cell).hasClass('number')){
+                        element.fields[key] = parseInt($(cell).text());
+                    } else {
+                        if ($(cell).hasClass('boolean')){
+                            element.fields[key] = $(cell).text() === 'true';
+                        } else {
+                            element.fields[key] = new Date($(cell).text());
+                        }
+                    }
+                }
+
+            });
+
+            element.pk = parseInt($(row).attr('id'));
+            element.model = $(row).attr('class');
+
+            yaml.push(element);
+        });
+
+        console.log(yaml);
+        var yaml_data = jsyaml.dump(yaml);
+        console.log(yaml_data);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                value: yaml_data
+            },
+            success: function(data){
 //                $(id).empty();
 //                $(id).append(data);
 //                $('.dp').datepicker();
-//            }
-//         });
+            }
+         });
 
 });
