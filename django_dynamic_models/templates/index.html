@@ -28,6 +28,8 @@
                                 class="{% if forloop.counter != 1 %}not_{% endif %}displayed scroll">
                             Choose table from the left "Available models" list
                         </div>
+
+                        <input type="submit" class="btn btn-large btn btn-success {{model}}_submit" style="display: none">
                     </form>
                     {% endfor %}
             </td>

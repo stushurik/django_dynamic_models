@@ -83,8 +83,6 @@ def ajax_get_model(request, model):
         try:
             query = items.next()
 
-            print query
-
         except StopIteration:
             pass
 
@@ -93,6 +91,8 @@ def ajax_get_model(request, model):
                 "yaml",
                 query,
             )
+
+        print type(data)
 
         return HttpResponse(
             data,
