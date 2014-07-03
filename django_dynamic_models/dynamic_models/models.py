@@ -10,7 +10,8 @@ def get_values_from_model(model, amount=None):
     step = amount
     start = 0
     while model.objects.all().exists():
-        yield model.objects.all()[start: step] \
-            if amount else model.objects.all()
+        rest = model.objects.all().count() - step
+        yield (model.objects.all()[start: step], rest) \
+            if amount else (model.objects.all(), 0)
         start = step
         step += amount

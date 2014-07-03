@@ -1,3 +1,29 @@
+function make_table_body(items){
+    var first_iteration = true;
+    var table_body = "";
+    var headers = "<tr>";
+    for (var i in items) {
+
+        var obj = items[i];
+        var row = "<tr id='" + obj.pk + "' class='" + obj.model + "'>";
+
+        for (key in obj.fields) {
+            row += "<td class='cell " + typeof obj.fields[key] + "' data-value='" + key + "'>" + obj.fields[key] + "</td>";
+
+            if (first_iteration) {
+                headers += "<th>" + key + "</th>";
+            }
+
+        }
+        first_iteration = false;
+        row += "</tr>";
+        headers += "</tr>";
+        table_body += row;
+    }
+
+    return [headers, table_body]
+}
+
 $(document).ready(function () {
 
     $(".menu").click(function (event) {
@@ -24,30 +50,13 @@ $(document).ready(function () {
                 url: href,
                 success: function (data) {
 
-                    var table_body = "";
-
                     var items = jsyaml.load(data);
 
-                    var first_iteration = true;
-                    var headers = "<tr>";
-                    for (var i in items) {
+                    var rest = items.pop().rest;
 
-                        var obj = items[i];
-                        var row = "<tr id='" + obj.pk + "' class='" + obj.model + "'>";
-
-                        for (key in obj.fields) {
-                            row += "<td class='cell " + typeof obj.fields[key] + "' data-value='" + key + "'>" + obj.fields[key] + "</td>";
-
-                            if (first_iteration) {
-                                headers += "<th>" + key + "</th>";
-                            }
-
-                        }
-                        first_iteration = false;
-                        row += "</tr>";
-                        headers += "</tr>";
-                        table_body += row;
-                    }
+                    var table_html = make_table_body(items);
+                    var table_body = table_html[1];
+                    var headers = table_html[0];
 
                     var table = '<table id="formset" class="form">' +
                         headers +
@@ -56,14 +65,51 @@ $(document).ready(function () {
 
                     $(id).empty();
                     $(id).append(table);
-//                    $('.dp').datepicker();
                     $(".btn").hide();
                     $("." + model + "_submit").show();
+                    $(".show_more").hide();
+                    if (rest > 0) {
+                        $("." + model + "_more").show();
+                    }
                 }
             });
         }
 
     });
+
+});
+
+$( document ).on( "click", ".show_more", function(event) {
+    event.preventDefault();
+
+    var form = $(event.target).parent();
+    var url =form.attr('action');
+
+    var link = $(this);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                more: true
+            },
+            success: function(data){
+
+                    var items = jsyaml.load(data);
+                    var rest = items.pop().rest;
+
+                    var table_html = make_table_body(items);
+                    var table_body = table_html[1];
+
+                    $('#formset').append(table_body);
+
+                    if (rest <= 0) {
+                        link.hide();
+                    }
+
+            }
+         });
 
 });
 
@@ -131,7 +177,7 @@ $( document ).on( "click", ".btn", function(event) {
 
         var url =form.attr('action');
 
-        var yaml = []
+        var yaml = [];
 
         var obj = {
             fields: {},
@@ -176,9 +222,7 @@ $( document ).on( "click", ".btn", function(event) {
             yaml.push(element);
         });
 
-        console.log(yaml);
         var yaml_data = jsyaml.dump(yaml);
-        console.log(yaml_data);
 
         $.ajax({
             type: "POST",

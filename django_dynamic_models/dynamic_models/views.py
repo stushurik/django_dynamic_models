@@ -32,30 +32,27 @@ def ajax_get_model(request, model):
         ct = ContentType.objects.get(model=model)
         more = request.POST.get('more')
 
-        items = None
+        # print not globals()['items'] or not more
 
-        if not items or not more:
+        if not globals()['items'] or not more:
             globals()['items'] = get_values_from_model(ct.model_class(), 2)
+            items = globals()['items']
+
+        if more:
             items = globals().get('items')
-
-        if request.POST:
-            print 'try deser'
-
+        else:
             yaml_data = request.POST.get('value')
+            if yaml_data:
+                for deserialized_object in serializers.deserialize("yaml", yaml_data):
+                    # deserialized_object.object._set_pk_val(None)
 
-            for deserialized_object in serializers.deserialize("yaml", yaml_data):
-                # deserialized_object.object._set_pk_val(None)
-
-                # print deserialized_object.object
-
-                deserialized_object.save()
-
-        print 'here'
+                    deserialized_object.save()
 
         query = None
+        rest = 0
 
         try:
-            query = items.next()
+            query, rest = items.next()
 
         except StopIteration:
             pass
@@ -63,8 +60,10 @@ def ajax_get_model(request, model):
         if query:
             data = serializers.serialize(
                 "yaml",
-                query,
+                query
             )
+
+        data += "\n- rest: %s" % rest
 
         return HttpResponse(
             data,

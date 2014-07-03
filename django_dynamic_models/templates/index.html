@@ -29,6 +29,7 @@
                             Choose table from the left "Available models" list
                         </div>
 
+                        <a href="{% url 'ajax_get_model' model %}" class="{{model}}_more show_more" style="display: none">more</a>
                         <input type="submit" class="btn btn-large btn btn-success {{model}}_submit" style="display: none">
                     </form>
                     {% endfor %}
